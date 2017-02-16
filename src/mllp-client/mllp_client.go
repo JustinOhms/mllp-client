@@ -3,16 +3,17 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"net"
 	"os"
-	"io/ioutil"
+	"strings"
 )
 
 const (
 	empty_filename = "<filename>"
-	mllp_start = 0x0b
-	mllp_end1  = 0x1c
-	mllp_end2  = 0x0d
+	mllp_start     = 0x0b
+	mllp_end1      = 0x1c
+	mllp_end2      = 0x0d
 )
 
 func main() {
@@ -41,10 +42,10 @@ func Send(file *string, host *string, port *int) {
 	defer conn.Close()
 
 	// write the actual message
-	conn.Write([]byte { mllp_start })
+	conn.Write([]byte{mllp_start})
 	fmt.Fprintf(conn, readfile(file))
-	conn.Write([]byte { mllp_end1 })
-	conn.Write([]byte { mllp_end2 })
+	conn.Write([]byte{mllp_end1})
+	conn.Write([]byte{mllp_end2})
 
 	// read response
 	reply := make([]byte, 1024)
@@ -63,5 +64,7 @@ func readfile(file *string) string {
 		fmt.Println("Reading file failed:", err.Error())
 		os.Exit(1)
 	}
-	return string(content)
+	istr := string(content)
+	fstr := strings.Replace(istr, "%", "%%", -1)
+	return fstr
 }

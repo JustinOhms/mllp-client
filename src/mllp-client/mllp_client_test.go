@@ -8,7 +8,7 @@ import (
 
 func TestSend(t *testing.T) {
 	host := "localhost"
-	port := 2575
+	port := 7010
 	dir, _ := filepath.Abs(filepath.Dir("adt_a01.txt"))
 	file := path.Join(dir, "adt_a01.txt")
 	Send(&file, &host, &port)
